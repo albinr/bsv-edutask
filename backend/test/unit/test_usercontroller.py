@@ -41,7 +41,7 @@ def test_user_one_match(usercontroller):
 @pytest.mark.unit
 @pytest.mark.lab1
 def test_user_multiple_match(usercontroller, capfd):
-  # Test that valid email with multiple matches returns the first user object
+  # Test that valid email with multiple matches returns the first user object and prints out warning message containing email
   # Test case 2
 
   # Arrange
