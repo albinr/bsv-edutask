@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import MagicMock
 from src.controllers.usercontroller import UserController
 from src.util.dao import DAO
+import re
 
 @pytest.fixture
 def usercontroller():
@@ -39,7 +40,7 @@ def test_user_one_match(usercontroller):
 
 @pytest.mark.unit
 @pytest.mark.lab1
-def test_user_multiple_match(usercontroller):
+def test_user_multiple_match(usercontroller, capfd):
   # Test that valid email with multiple matches returns the first user object
   # Test case 2
 
@@ -66,7 +67,12 @@ def test_user_multiple_match(usercontroller):
   # Act
   result = usercontroller.get_user_by_email("user@email.com")
 
+  # Arrange (again)
+  out, _ = capfd.readouterr() # Capture prints
+
   # Assert
+  assert re.search(r"user@email\.com", out) is not None # Check for email in print
+
   assert result == {
     "firstName": "John",
     "lastName": "Doe",
