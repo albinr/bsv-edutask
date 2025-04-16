@@ -23,7 +23,6 @@ def test_user_one_match(usercontroller):
           "firstName": "John",
           "lastName": "Doe",
           "email": "user@email.com",
-          "tasks": []
       }
   ]
   usercontroller.dao.find.return_value = find_return_value
@@ -36,7 +35,6 @@ def test_user_one_match(usercontroller):
     "firstName": "John",
     "lastName": "Doe",
     "email": "user@email.com",
-    "tasks": []
   }
 
 @pytest.mark.unit
@@ -51,19 +49,16 @@ def test_user_multiple_match(usercontroller):
           "firstName": "John",
           "lastName": "Doe",
           "email": "user@email.com",
-          "tasks": []
       },
       {
           "firstName": "Jane",
           "lastName": "Doe",
           "email": "user@email.com",
-          "tasks": []
       },
       {
           "firstName": "Erik",
           "lastName": "Doe",
           "email": "user@email.com",
-          "tasks": []
       }
   ]
   usercontroller.dao.find.return_value = find_return_value
@@ -76,7 +71,6 @@ def test_user_multiple_match(usercontroller):
     "firstName": "John",
     "lastName": "Doe",
     "email": "user@email.com",
-    "tasks": []
   }
 
 @pytest.mark.unit
@@ -126,6 +120,6 @@ def test_invalid_email_raises_valueerror(usercontroller, test_input_email):
   # Test case 5, 6, 7, 8
 
   # Assert
-    with pytest.raises(ValueError):
-        # Act
-        usercontroller.get_user_by_email(test_input_email)
+  with pytest.raises(ValueError):
+      # Act
+      usercontroller.get_user_by_email(test_input_email)
