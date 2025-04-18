@@ -6,7 +6,10 @@ import re
 
 @pytest.fixture
 def usercontroller():
-    # Mock DAO and use in usercontroller as param
+    """
+    Mock DAO and use in usercontroller as param
+    """
+    # Mock the DAO class
     dao = MagicMock(spec=DAO)
     usercontroller = UserController(dao)
 
@@ -15,8 +18,10 @@ def usercontroller():
 @pytest.mark.unit
 @pytest.mark.lab1
 def test_user_one_match(usercontroller):
-  # Test that valid email with one match returns the user object
-  # Test case 1
+  """
+  Test case 1
+  Test that valid email with one match returns the user object
+  """
 
   # Arrange
   find_return_value = [
@@ -41,8 +46,10 @@ def test_user_one_match(usercontroller):
 @pytest.mark.unit
 @pytest.mark.lab1
 def test_user_multiple_match(usercontroller, capfd):
-  # Test that valid email with multiple matches returns the first user object and prints out warning message containing email
-  # Test case 2
+  """
+  Test case 2
+  Test that valid email with multiple matches returns the first user object and prints out warning message containing email
+  """
 
   # Arrange
   find_return_value = [
@@ -82,8 +89,10 @@ def test_user_multiple_match(usercontroller, capfd):
 @pytest.mark.unit
 @pytest.mark.lab1
 def test_user_no_match(usercontroller):
-  # Test that valid email with one match returns the user object
-  # Test case 3
+  """
+  Test case 3
+  Test that valid email with no match returns None
+  """
 
   # Arrange
   find_return_value = [] # No match
@@ -98,8 +107,10 @@ def test_user_no_match(usercontroller):
 @pytest.mark.unit
 @pytest.mark.lab1
 def test_database_problem_raise_exception(usercontroller):
-  # Test that exception is raised if database has problems
-  # Test case 4
+  """
+  Test case 4
+  Test that exception is raised if database has problems
+  """
 
   # Arrange
   # Simulate database error as side_effect in mocked dao.find
@@ -119,12 +130,16 @@ def test_database_problem_raise_exception(usercontroller):
       ("name@.com"),
       ("name@domain"),
       ("namedomaincom"),
+      (""),
+      (1337),
+
     ]
 )
 def test_invalid_email_raises_valueerror(usercontroller, test_input_email):
-  # Test that invalid email raises ValueError
-  # Test case 5, 6, 7, 8
-
+  """
+  Test case 5, 6, 7, 8
+  Test that invalid email raises ValueError
+  """
   # Assert
   with pytest.raises(ValueError):
       # Act
