@@ -39,28 +39,9 @@ def test_valid_input_does_not_raise_writeerror(dao):
 @pytest.mark.integration
 @pytest.mark.lab1
 @pytest.mark.lab1assignment3
-def test_missing_properties_raises_writeerror(dao):
-  """
-  Test case 2
-  Test that invalid input data raises WriteError
-  """
-  # Arrange
-  test_input_data = {
-    "done": False,
-  }
-
-  # Assert
-  with pytest.raises(WriteError):
-      # Act
-      dao.create(test_input_data)
-
-
-@pytest.mark.integration
-@pytest.mark.lab1
-@pytest.mark.lab1assignment3
 def test_duplicate_description_raises_writeerror(dao):
   """
-  Test case 3
+  Test case 2
   Test that inserting a duplicate 'description' raises WriteError due to uniqueness constraint.
   """
   # Arrange
@@ -72,6 +53,24 @@ def test_duplicate_description_raises_writeerror(dao):
     # Act
     dao.create(test_input_data)
 
+
+@pytest.mark.integration
+@pytest.mark.lab1
+@pytest.mark.lab1assignment3
+def test_missing_properties_raises_writeerror(dao):
+  """
+  Test case 3
+  Test that invalid input data raises WriteError (missing required properties).
+  """
+  # Arrange
+  test_input_data = {
+    "done": False,
+  }
+
+  # Assert
+  with pytest.raises(WriteError):
+      # Act
+      dao.create(test_input_data)
 
 @pytest.mark.integration
 @pytest.mark.lab1
@@ -97,13 +96,13 @@ def test_valid_todo_without_done_is_inserted(dao):
 @pytest.mark.integration
 @pytest.mark.lab1
 @pytest.mark.lab1assignment3
-def test_missing_description_raises_writeerror(dao):
+def test_invalid_data_raises_writeerror(dao):
   """
   Test case 5
   Test that missing required 'description' raises WriteError.
   """
   # Arrange
-  test_input_data = {"done": True}
+  test_input_data = {"blabla": 100, "wrong": "true"}
 
   # Act
   with pytest.raises(WriteError):
@@ -113,9 +112,22 @@ def test_missing_description_raises_writeerror(dao):
 @pytest.mark.integration
 @pytest.mark.lab1
 @pytest.mark.lab1assignment3
-def test_invalid_done_type_raises_writeerror(dao):
+def test_input_empty_dict_raises_writeerror(dao):
     """
     Test case 6
+    Test that invalid 'done' type raises WriteError.
+    """
+    test_input_data = {}
+    with pytest.raises(WriteError):
+        dao.create(test_input_data)
+
+
+@pytest.mark.integration
+@pytest.mark.lab1
+@pytest.mark.lab1assignment3
+def test_invalid_done_type_raises_writeerror(dao):
+    """
+    Test case 7
     Test that invalid 'done' type raises WriteError.
     """
     test_input_data = {"description": "wrong type", "done": "no"}
@@ -128,10 +140,9 @@ def test_invalid_done_type_raises_writeerror(dao):
 @pytest.mark.lab1assignment3
 def test_extra_field_is_allowed(dao):
     """
-    Test case 7
-    Test that extra field 'category' is allowed and stored correctly.
+    Test case 8
+    Test that extra field 'extra' is allowed and stored correctly.
     """
-    test_input_data = {"description": "with category", "done": True, "category": "school"}
+    test_input_data = {"description": "test with extra field", "done": True, "extra": "extra field"}
     result = dao.create(test_input_data)
-    assert result["category"] == "school"
-
+    assert result["extra"] == "extra field"
