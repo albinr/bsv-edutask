@@ -12,7 +12,9 @@ def dao():
     collection = "todo"
     dao = DAO(collection)
 
-    return dao
+    dao.collection.delete_many({})  # Clear before test
+    yield dao
+    dao.collection.delete_many({})  # Clean up after test
 
 @pytest.mark.integration
 @pytest.mark.lab1
