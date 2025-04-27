@@ -95,8 +95,8 @@ def test_missing_properties_raises_writeerror(dao):
 
   # Assert
   with pytest.raises(WriteError):
-      # Act
-      dao.create(test_input_data)
+    # Act
+    dao.create(test_input_data)
 
 @pytest.mark.integration
 @pytest.mark.lab1
@@ -143,9 +143,12 @@ def test_input_empty_dict_raises_writeerror(dao):
   Test case 8
   Test that inserts empty dict type raises WriteError.
   """
+  # Arrange
   test_input_data = {}
+  # Act
   with pytest.raises(WriteError):
-      dao.create(test_input_data)
+    # Assert
+    dao.create(test_input_data)
 
 
 @pytest.mark.integration
@@ -156,9 +159,12 @@ def test_invalid_done_type_raises_writeerror(dao):
   Test case 9
   Test that invalid "done" type raises WriteError.
   """
+  # Arrange
   test_input_data = {"description": "wrong type", "done": "no"}
+  # Act
   with pytest.raises(WriteError):
-      dao.create(test_input_data)
+    # Assert
+    dao.create(test_input_data)
 
 
 @pytest.mark.integration
@@ -169,6 +175,9 @@ def test_extra_field_is_allowed(dao):
   Test case 10
   Test that extra field "extra" is allowed and stored correctly.
   """
+  # Arrange
   test_input_data = {"description": "test with extra field", "done": True, "extra": "extra field"}
+  # Act
   result = dao.create(test_input_data)
+  # Assert
   assert result["extra"] == "extra field"
