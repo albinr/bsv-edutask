@@ -4,6 +4,8 @@ describe('Test TODO system', () => {
   let name // name of the user (firstName + ' ' + lastName)
   let email // email of the user
 
+  let taskTitle // title of the task
+
   before(function () {
     // create a fabricated user from a fixture
     cy.fixture('user.json')
@@ -23,7 +25,6 @@ describe('Test TODO system', () => {
     // create task
     cy.fixture('task.json')
       .then((task) => {
-
         // add userid from created user
         task.userid = uid;
 
@@ -34,7 +35,7 @@ describe('Test TODO system', () => {
           form: true,
           body: task
         }).then((response) => {
-          console.log(response);
+          taskTitle = response.body.title // Save task title
         })
       })
     })
@@ -72,6 +73,16 @@ describe('Test TODO system', () => {
     cy.get('.todo-list > .todo-item')
       .last() // should be last todo (bottom of list)
       .should('contain.text', 'Close video')
+  })
+
+  it('TC03 - Disabled add button when todo has no description', () => {
+    cy.get('.title-overlay').click() // click into task
+
+    // Ensure the input field is empty
+    cy.get('.inline-form > [type="text"]').should('have.value', '')
+
+    // Verify that the submit button is disabled
+    cy.get('.inline-form > [type="submit"]').should('be.disabled')
   })
 
   after(function () {
