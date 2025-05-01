@@ -19,7 +19,25 @@ describe('Test TODO system', () => {
           email = user.email
         })
       })
-  })
+
+    // create task
+    cy.fixture('task.json')
+      .then((task) => {
+
+        // add userid from created user
+        task.userid = uid;
+
+        // add task to user account
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:5000/tasks/create',
+          form: true,
+          body: task
+        }).then((response) => {
+          console.log(response);
+        })
+      })
+    })
 
   beforeEach(function () {
     // enter the main main page
@@ -39,6 +57,21 @@ describe('Test TODO system', () => {
     // See that user can access todo page when logged in
     cy.get('h1')
       .should('contain.text', 'Your tasks, ' + name)
+  })
+
+  it('TC02 - Successfully add todo to task', () => {
+    // See that user can access todo page when logged in
+    cy.get('h1')
+      .should('contain.text', 'Your tasks, ' + name)
+
+    cy.get('.title-overlay').click() // click into task
+    cy.get('.inline-form > [type="text"]').type('Close video') // add name of todo
+    cy.get('.inline-form > [type="submit"]').click() // submit (add) new todo to task
+
+    // check that new todo was added to todo-list
+    cy.get('.todo-list > .todo-item')
+      .last() // should be last todo (bottom of list)
+      .should('contain.text', 'Close video')
   })
 
   after(function () {
