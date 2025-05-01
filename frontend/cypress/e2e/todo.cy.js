@@ -38,7 +38,7 @@ describe('Test TODO system', () => {
           taskTitle = response.body.title // Save task title
         })
       })
-    })
+  })
 
   beforeEach(function () {
     // enter the main main page
@@ -46,12 +46,12 @@ describe('Test TODO system', () => {
 
     // detect a div which contains "Email Address", find the input and type (in a declarative way)
     cy.contains('div', 'Email Address')
-    .find('input[type=text]')
-    .type(email)
+      .find('input[type=text]')
+      .type(email)
 
-  // submit the form on this page
-  cy.get('form')
-    .submit()
+    // submit the form on this page
+    cy.get('form')
+      .submit()
   })
 
   it('access todo page when logged in', () => {
@@ -84,6 +84,72 @@ describe('Test TODO system', () => {
     // Verify that the submit button is disabled
     cy.get('.inline-form > [type="submit"]').should('be.disabled')
   })
+
+  it('TC04 - Toggle todo to done (checked)', () => {
+    const todoDescription = 'Watch video';
+
+    cy.get('.title-overlay').click(); // Navigate to task view
+
+    // confirm the todo exists
+    cy.contains('.todo-item', todoDescription)
+      .as('existingTodo');
+
+    // click the checker to mark as done
+    cy.get('@existingTodo')
+      .find('.checker')
+      .click();
+
+    // assert the todo item is marked as checked
+    cy.get('@existingTodo')
+      .should('have.class', 'checked');
+  });
+
+  it('TC05 - Untoggle todo to active (unchecked)', () => {
+    const todoDescription = 'Watch video';
+
+    cy.get('.title-overlay').click(); // open task
+
+    // find and toggle to "checked"
+    cy.contains('.todo-item', todoDescription)
+      .as('todoItem');
+
+    cy.get('@todoItem')
+      .find('.checker')
+      .click();
+
+    // toggle back to unchecked
+    cy.get('@todoItem')
+      .find('.checker')
+      .click();
+
+    // assert it no longer has the uncheced class
+    cy.get('@todoItem')
+      .should('not.have.class', 'unchecked');
+  });
+
+
+  it('TC06 - Remove todo', () => {
+    const todoDescription = 'Remove this todo';
+
+    cy.get('.title-overlay').click(); // open task
+
+    // add a todo that will be removed
+    cy.get('.inline-form > [type="text"]').type(todoDescription, { force: true }); // Becaue of viewport i use forece: true
+    cy.get('.inline-form > [type="submit"]').click({ force: true });
+
+    // confirm it is created
+    cy.contains('.todo-item', todoDescription).as('todoToDelete');
+
+    // click the remove button
+    cy.get('@todoToDelete')
+      .find('.remover')
+      .click({ force: true });
+
+    // assert its no longer in the list
+    cy.get('.todo-list')
+      .should('not.contain.text', todoDescription);
+  });
+
 
   after(function () {
     // clean up by deleting the user from the database
