@@ -7,6 +7,16 @@ describe('Test TODO system', () => {
   let taskTitle // title of the task
 
   before(function () {
+    // clean up by deleting the user from the database
+    if (uid) {
+      cy.request({
+        method: 'DELETE',
+        url: `http://localhost:5000/users/${uid}`
+      }).then((response) => {
+        cy.log(response.body)
+      })
+    }
+
     // create a fabricated user from a fixture
     cy.fixture('user.json')
       .then((user) => {
@@ -88,7 +98,8 @@ describe('Test TODO system', () => {
   it('TC04 - Toggle todo to done (checked)', () => {
     const todoDescription = 'Watch video';
 
-    cy.get('.title-overlay').click(); // Navigate to task view
+    // navigate to task view
+    cy.get('.title-overlay').click();
 
     // confirm the todo exists
     cy.contains('.todo-item', todoDescription)
@@ -99,20 +110,29 @@ describe('Test TODO system', () => {
       .find('.checker')
       .click();
 
-    // assert the todo item is marked as checked
+    // assert the todo item checker is marked as checked
     cy.get('@existingTodo')
+      .find('.checker')
       .should('have.class', 'checked');
+
+    // assert that todo text has strike throught
+    cy.get('@existingTodo')
+      .find('.editable')
+      .should('have.css', 'text-decoration')
+      .and('include', 'line-through');
   });
 
   it('TC05 - Untoggle todo to active (unchecked)', () => {
     const todoDescription = 'Watch video';
 
-    cy.get('.title-overlay').click(); // open task
+    // open task detailed view
+    cy.get('.title-overlay').click();
 
-    // find and toggle to "checked"
+    // find the todo item
     cy.contains('.todo-item', todoDescription)
       .as('todoItem');
 
+    // toggle to checked
     cy.get('@todoItem')
       .find('.checker')
       .click();
@@ -122,9 +142,18 @@ describe('Test TODO system', () => {
       .find('.checker')
       .click();
 
-    // assert it no longer has the uncheced class
+    // assert the todo item checker is not marked as checked
     cy.get('@todoItem')
-      .should('not.have.class', 'unchecked');
+    .find('.checker')
+    .should('not.have.class', 'checked');
+
+    // assert that todo text has strike throught
+    cy.get('@todoItem')
+      .find('.editable')
+      .should('have.css', 'text-decoration')
+      .and((textDecoration) => {
+        expect(textDecoration).not.to.include('line-through');
+      });
   });
 
 
