@@ -41,23 +41,24 @@ describe('Test TODO system', () => {
   })
 
   beforeEach(function () {
-    // enter the main main page
-    cy.visit('http://localhost:3000')
+    // Visit the main page
+    cy.visit('http://localhost:3000');
 
-    // detect a div which contains "Email Address", find the input and type (in a declarative way)
+    // Log in
     cy.contains('div', 'Email Address')
       .find('input[type=text]')
-      .type(email)
+      .type(email);
 
-    // submit the form on this page
-    cy.get('form')
-      .submit()
+    cy.get('form').submit();
   })
 
-  it('access todo page when logged in', () => {
-    // See that user can access todo page when logged in
+  it('TC01 - Try to do to do-stuff without being logged in', () => {
+    // See that user can't access todo page when not logged in
+    cy.clearCookies(); // Clear cookies (to remove login)
+    cy.visit('http://localhost:3000'); // Visit landing page again
+
     cy.get('h1')
-      .should('contain.text', 'Your tasks, ' + name)
+      .should('not.contain.text', 'Your tasks, ' + name)
   })
 
   it('TC02 - Successfully add todo to task', () => {
