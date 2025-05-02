@@ -54,7 +54,6 @@ describe('Test TODO system', () => {
 
   it('TC01 - Try to do to do-stuff without being logged in', () => {
     // See that user can't access todo page when not logged in
-    cy.clearCookies(); // Clear cookies (to remove login)
     cy.visit('http://localhost:3000'); // Visit landing page again
 
     cy.get('h1')
