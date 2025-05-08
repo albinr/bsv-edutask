@@ -17,6 +17,7 @@ def usercontroller():
 
 @pytest.mark.unit
 @pytest.mark.lab1
+@pytest.mark.lab1assignment2
 def test_user_one_match(usercontroller):
   """
   Test case 1
@@ -45,6 +46,7 @@ def test_user_one_match(usercontroller):
 
 @pytest.mark.unit
 @pytest.mark.lab1
+@pytest.mark.lab1assignment2
 def test_user_multiple_match(usercontroller, capfd):
   """
   Test case 2
@@ -74,12 +76,7 @@ def test_user_multiple_match(usercontroller, capfd):
   # Act
   result = usercontroller.get_user_by_email("user@email.com")
 
-  # Arrange (again)
-  out, _ = capfd.readouterr() # Capture prints
-
   # Assert
-  assert re.search(r"user@email\.com", out) is not None # Check for email in print
-
   assert result == {
     "firstName": "John",
     "lastName": "Doe",
@@ -88,6 +85,45 @@ def test_user_multiple_match(usercontroller, capfd):
 
 @pytest.mark.unit
 @pytest.mark.lab1
+@pytest.mark.lab1assignment2
+def test_user_multiple_match_prints_email(usercontroller, capfd):
+  """
+  Test case 2
+  Test that valid email with multiple matches returns the first user object and prints out warning message containing email
+  """
+
+  # Arrange
+  find_return_value = [
+      {
+          "firstName": "John",
+          "lastName": "Doe",
+          "email": "user@email.com",
+      },
+      {
+          "firstName": "Jane",
+          "lastName": "Doe",
+          "email": "user@email.com",
+      },
+      {
+          "firstName": "Erik",
+          "lastName": "Doe",
+          "email": "user@email.com",
+      }
+  ]
+  usercontroller.dao.find.return_value = find_return_value
+
+  # Act
+  usercontroller.get_user_by_email("user@email.com")
+
+  # Arrange (again)
+  out, _ = capfd.readouterr() # Capture prints
+
+  # Assert
+  assert re.search(r"user@email\.com", out) is not None # Check for email in print
+
+@pytest.mark.unit
+@pytest.mark.lab1
+@pytest.mark.lab1assignment2
 def test_user_no_match(usercontroller):
   """
   Test case 3
@@ -106,6 +142,7 @@ def test_user_no_match(usercontroller):
 
 @pytest.mark.unit
 @pytest.mark.lab1
+@pytest.mark.lab1assignment2
 def test_database_problem_raise_exception(usercontroller):
   """
   Test case 4
@@ -123,6 +160,7 @@ def test_database_problem_raise_exception(usercontroller):
 
 @pytest.mark.unit
 @pytest.mark.lab1
+@pytest.mark.lab1assignment2
 @pytest.mark.parametrize(
     "test_input_email",
     [
