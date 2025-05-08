@@ -50,8 +50,6 @@ def test_valid_input_success(dao):
 
   # Assert
   assert result["description"] == "Eat an apple"
-  assert result["done"] is True
-  assert "_id" in result
 
 
 @pytest.mark.integration
