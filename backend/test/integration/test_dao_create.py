@@ -1,20 +1,38 @@
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import patch
 from src.util.dao import DAO
 from pymongo.errors import WriteError
+import json
 
 @pytest.fixture
 def dao():
   """
-  Initialise DAO (and database in DAO)
+  Initialise DAO with a mock/test validator.
   """
+  test_validator = {
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["description"],
+        "properties": {
+            "description": {
+                "bsonType": "string",
+                "description": "the description of a todo must be determined",
+                "uniqueItems": True
+            },
+            "done": {
+                "bsonType": "bool"
+            }
+        }
+    }
+}
 
-  collection = "todo"
-  dao = DAO(collection)
+  # Mock the getValidator function to return the test validator
+  with patch('src.util.dao.getValidator', return_value=test_validator, autospec=True):
+    collection = "mockTodo"
+    dao = DAO(collection)
 
-  dao.collection.delete_many({})  # Clear before test
-  yield dao
-  dao.collection.delete_many({})  # Clean up after test
+    yield dao
+    dao.collection.drop()  # Clean up after test
 
 @pytest.mark.integration
 @pytest.mark.lab1
