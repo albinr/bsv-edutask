@@ -17,9 +17,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.pip
 
       - name: Run unit tests
         run: |
+          cd backend
           python -m unit discover -s tests
