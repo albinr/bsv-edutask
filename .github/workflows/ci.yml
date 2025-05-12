@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.pip
 
-      - name: Run unit tests
+      - name: Run unit tests with pytest
         run: |
           cd backend
-          python -m unit discover -s tests
+          pytest -m "unit"
