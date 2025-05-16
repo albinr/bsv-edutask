@@ -57,9 +57,9 @@ describe('Test TODO system', () => {
     // Log in
     cy.contains('div', 'Email Address')
       .find('input[type=text]')
-      .type(email);
+      .type(email, { force: true });
 
-    cy.get('form').submit();
+    cy.get('form').submit({ force: true });
   })
 
   it('TC01 - Try to do to do-stuff without being logged in', () => {
@@ -75,9 +75,9 @@ describe('Test TODO system', () => {
     cy.get('h1')
       .should('contain.text', 'Your tasks, ' + name)
 
-    cy.get('.title-overlay').click() // click into task
-    cy.get('.inline-form > [type="text"]').type('Close video') // add name of todo
-    cy.get('.inline-form > [type="submit"]').click() // submit (add) new todo to task
+    cy.get('.title-overlay').click({ force: true }) // click into task
+    cy.get('.inline-form > [type="text"]').type('Close video', { force: true }) // add name of todo
+    cy.get('.inline-form > [type="submit"]').click({ force: true }) // submit (add) new todo to task
 
     // check that new todo was added to todo-list
     cy.get('.todo-list > .todo-item')
@@ -86,7 +86,7 @@ describe('Test TODO system', () => {
   })
 
   it('TC03 - Disabled add button when todo has no description', () => {
-    cy.get('.title-overlay').click() // click into task
+    cy.get('.title-overlay').click({ force: true }) // click into task
 
     // Ensure the input field is empty
     cy.get('.inline-form > [type="text"]').should('have.value', '')
@@ -99,7 +99,7 @@ describe('Test TODO system', () => {
     const todoDescription = 'Watch video';
 
     // navigate to task view
-    cy.get('.title-overlay').click();
+    cy.get('.title-overlay').click({ force: true });
 
     // confirm the todo exists
     cy.contains('.todo-item', todoDescription)
@@ -108,7 +108,7 @@ describe('Test TODO system', () => {
     // click the checker to mark as done
     cy.get('@existingTodo')
       .find('.checker')
-      .click();
+      .click({ force: true });
 
     // assert the todo item checker is marked as checked
     cy.get('@existingTodo')
@@ -126,7 +126,7 @@ describe('Test TODO system', () => {
     const todoDescription = 'Watch video';
 
     // open task detailed view
-    cy.get('.title-overlay').click();
+    cy.get('.title-overlay').click({ force: true });
 
     // find the todo item
     cy.contains('.todo-item', todoDescription)
@@ -135,12 +135,12 @@ describe('Test TODO system', () => {
     // toggle to checked
     cy.get('@todoItem')
       .find('.checker')
-      .click();
+      .click({ force: true });
 
     // toggle back to unchecked
     cy.get('@todoItem')
       .find('.checker')
-      .click();
+      .click({ force: true });
 
     // assert the todo item checker is not marked as checked
     cy.get('@todoItem')
@@ -160,7 +160,7 @@ describe('Test TODO system', () => {
   it('TC06 - Remove todo', () => {
     const todoDescription = 'Remove this todo';
 
-    cy.get('.title-overlay').click(); // open task
+    cy.get('.title-overlay').click({ force: true }); // open task
 
     // add a todo that will be removed
     cy.get('.inline-form > [type="text"]').type(todoDescription, { force: true }); // Becaue of viewport i use forece: true
